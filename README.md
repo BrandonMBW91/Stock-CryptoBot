@@ -1,16 +1,30 @@
-# Alpaca Trading Bot
+# Alpaca Trading Bot v2.0
 
-A sophisticated multi-strategy trading bot for Alpaca Markets supporting both cryptocurrency and stock trading with real-time monitoring, risk management, and Discord notifications.
+A sophisticated multi-strategy trading bot for Alpaca Markets supporting both cryptocurrency and stock trading with real-time monitoring, adaptive risk management, and Discord notifications.
 
 ## Features
 
-- **🔄 Intelligent Trend Rotation** ⭐ NEW!
-  - Automatically analyzes ALL assets every 4 hours
+- **🔥 Hot Signal Indicator** ⭐ NEW!
+  - Real-time countdown to next market scan
+  - Visual alert when signals approach trade threshold
+  - 1-second dashboard updates
+
+- **🔄 Auto-Restart Wrapper** ⭐ NEW!
+  - Automatic recovery from crashes
+  - Rate limiting (max 10 restarts/hour)
+  - Graceful shutdown handling
+
+- **📊 Backtesting Mode** ⭐ NEW!
+  - Test strategies on historical data
+  - Comprehensive performance metrics
+  - Strategy comparison and recommendations
+
+- **🎯 Intelligent Trend Rotation**
+  - Analyzes ALL assets every 4 hours
   - 100-point scoring system (momentum, trend, volume, technicals, volatility)
   - Focuses trading on top 50% trending assets
   - Market sentiment analysis (BULLISH/BEARISH)
   - Discord notifications on each rotation
-  - Maximizes profits by trading only hot assets
 
 - **Multi-Strategy Trading**
   - Scalping (1-minute timeframe)
@@ -18,36 +32,33 @@ A sophisticated multi-strategy trading bot for Alpaca Markets supporting both cr
   - Swing Trading (4-hour timeframe)
 
 - **Advanced Technical Analysis**
-  - RSI, MACD, Moving Averages
-  - Bollinger Bands, ATR
-  - Volume analysis
+  - RSI Slope Analysis (momentum detection)
   - Multi-timeframe confirmation
+  - Correlation analysis (max 2 positions per group)
+  - MACD, Moving Averages, Bollinger Bands, ATR
+  - Volume analysis
 
-- **Risk Management**
-  - Position sizing (15% max per trade)
-  - Stop-loss (2.5%) and take-profit (5%) automation
-  - Daily loss limits (5%)
-  - Maximum concurrent positions (10)
-  - Emergency stop mechanism
+- **Adaptive Risk Management**
+  - ATR-based stop-loss and take-profit
+  - Drawdown protection with consecutive loss limits
+  - Portfolio heat management (max 40% exposure)
+  - Sentiment-based position sizing
+  - Symbol locking to prevent strategy conflicts
+  - Time-of-day filtering for optimal trading hours
 
 - **Real-Time Monitoring**
-  - Beautiful enhanced PowerShell HUD dashboard
-  - Animated progress bars and indicators
+  - In-place dashboard updates (no scrolling)
   - Live portfolio tracking with color coding
-  - Position monitoring with visual charts
+  - Position monitoring with P/L visualization
   - Signal detection display
   - Recent trades log
+  - Hot signal alerts
 
 - **Discord Integration**
   - Trade notifications
   - Error alerts
   - Daily performance summaries
   - Trend rotation updates
-
-- **Market Hours Detection**
-  - Automatic market hours tracking
-  - 24/7 crypto trading
-  - Stock trading during market hours only
 
 ## Supported Assets
 
@@ -74,150 +85,140 @@ npm install
    - Asset lists
    - Strategy settings
 
-## Configuration
-
-Edit `config.json` to customize:
-
-- **Trading Parameters**
-  - Starting capital
-  - Position size limits
-  - Stop-loss/take-profit percentages
-  - Daily loss limits
-
-- **Strategies**
-  - Enable/disable specific strategies
-  - Adjust indicator periods
-  - Modify signal thresholds
-
-- **Assets**
-  - Add/remove cryptocurrencies
-  - Add/remove stocks
-
 ## Usage
 
-### Start the Bot
-
+### Normal Start
 ```bash
 npm start
 ```
 
-### Dashboard Controls
+### Auto-Restart Mode (Recommended for Live Trading)
+```bash
+npm run restart
+```
+- Automatically restarts if bot crashes
+- Logs all restarts to `restart.log`
+- Press Ctrl+C to stop gracefully
 
-- **ESC / Q / Ctrl+C**: Quit the bot
-- **L**: Toggle system log view
+### Backtesting Mode
+```bash
+npm run backtest
+```
+- Tests strategies on last 30 days of data
+- Shows win rate, profit factor, drawdown
+- Provides recommendations before live trading
 
-### Dashboard Panels
+## New Features Explained
 
-1. **Portfolio Overview**: Shows equity, buying power, daily P/L, position count
-2. **Open Positions**: Live table of current positions with P/L
-3. **Daily Statistics**: Trade count, win rate, total P/L
-4. **Recent Signals**: Latest trading signals from all strategies
-5. **Recent Trades**: Executed trades log
+### Hot Signal Indicator
+The dashboard now shows:
+- **Countdown timer**: "Next scan in 45s" between market analysis cycles
+- **Hot signal alert**: 🔥 when signals with strength ≥65 are detected (approaching trade threshold of 70)
+- Helps you anticipate when trades are about to happen
+
+### Auto-Restart Wrapper
+- Monitors the bot process
+- Automatically restarts on crashes (max 10/hour)
+- 5-second delay between restarts
+- Logs all events to `restart.log`
+- Won't restart if you manually stop (Ctrl+C or exit code 0)
+
+### Backtesting Mode
+Test your strategies before risking real money:
+- Simulates trades on historical data
+- Calculates performance metrics
+- Shows strategy breakdown
+- Provides actionable recommendations
+- Customize test period and symbols in `backtest.js`
 
 ## Risk Management
 
 The bot includes multiple safety mechanisms:
 
-1. **Position Limits**: Maximum 10 concurrent positions
-2. **Position Sizing**: Each position limited to 15% of portfolio
-3. **Stop-Loss**: Automatic 2.5% stop-loss on all trades
-4. **Take-Profit**: Automatic 5% take-profit targets
-5. **Daily Loss Limit**: Trading stops if daily loss exceeds 5%
-6. **Emergency Stop**: Manual and automatic emergency stop capability
+1. **Adaptive Stop-Loss**: ATR-based (2x ATR or min 2%)
+2. **Adaptive Take-Profit**: 2:1 reward-to-risk ratio
+3. **Drawdown Protection**: Reduces position size after 3 consecutive losses
+4. **Portfolio Heat**: Maximum 40% of capital at risk
+5. **Correlation Limits**: Max 2 positions per correlation group
+6. **Time-of-Day Filtering**: Avoids poor trading hours
+7. **Daily Loss Limit**: Emergency stop at 5% daily loss
+8. **Symbol Locking**: Prevents multiple strategies trading same symbol
 
 ## Strategy Details
 
 ### Scalping Strategy
 - Timeframe: 1 minute
-- Indicators: RSI (14), EMA (9), Volume
-- Entry: RSI oversold/overbought with high volume confirmation
-- Target: Quick 5% gains
+- Uses RSI slope for momentum detection
+- Multi-timeframe confirmation required
+- Time filter: Trades only during PRIME/GOOD hours
+- Target: Quick gains with tight stops
 
 ### Day Trading Strategy
 - Timeframe: 5 minutes
-- Indicators: RSI (14), MACD (12,26,9), SMA (20)
-- Entry: MACD crossover + trend confirmation + volume
-- Target: 5% gains with trend following
+- RSI slope + MACD + trend confirmation
+- Multi-timeframe confirmation required
+- Correlation-aware position management
+- ATR-based adaptive stops
 
 ### Swing Trading Strategy
 - Timeframe: 4 hours
-- Indicators: RSI (14), SMA (50, 200), Bollinger Bands
-- Entry: Price near Bollinger bands + SMA trend confirmation
-- Target: 10% gains (wider stops and targets)
-
-## Discord Notifications
-
-The bot sends notifications for:
-
-1. **Trade Notifications**: Every buy/sell order executed
-2. **Error Alerts**: System errors and failures
-3. **Daily Summaries**: End-of-day performance report with:
-   - Total trades and win rate
-   - P/L and P/L percentage
-   - Top winners and losers
-   - Open positions
-
-## Logging
-
-Logs are saved in the `logs/` directory:
-
-- `main_YYYY-MM-DD.log`: General operations
-- `trades_YYYY-MM-DD.log`: All trade executions
-- `errors_YYYY-MM-DD.log`: Error tracking
+- Bollinger Bands + SMA trend confirmation
+- Multi-timeframe analysis
+- Wider stops for trend following
+- Target: Larger moves with patience
 
 ## Warning
 
 **IMPORTANT**: This bot trades with REAL MONEY.
 
+- **RUN BACKTESTING FIRST**: `npm run backtest`
 - Start with small amounts
 - Monitor the bot regularly
 - Understand the strategies before running
-- Review all configuration settings
 - Be aware that trading involves risk of loss
 - Past performance does not guarantee future results
 
 ## Trading Mode
 
-The bot is currently configured for **LIVE TRADING** with real money. To switch to paper trading:
+The bot is currently configured for **LIVE TRADING**. To switch to paper trading:
 
 1. Open `config.json`
 2. Change `"paper": false` to `"paper": true`
 3. Restart the bot
 
-## Support
-
-For issues or questions:
-1. Check the logs in the `logs/` directory
-2. Review Discord error notifications
-3. Check the system log in the dashboard (press 'L')
-
 ## Architecture
 
 ```
 Bot/
-├── config.json              # Configuration file
-├── package.json             # Dependencies
+├── config.json                      # Configuration
+├── package.json                     # Dependencies
+├── restart.js                       # Auto-restart wrapper
+├── backtest.js                      # Backtesting engine
 ├── src/
-│   ├── index.js            # Main entry point
+│   ├── index.js                    # Entry point
 │   ├── analysis/
-│   │   └── TechnicalAnalysis.js    # Technical indicators
+│   │   ├── TechnicalAnalysis.js    # Indicators
+│   │   ├── TrendAnalyzer.js        # Trend scoring
+│   │   ├── RSISlope.js             # Momentum detection
+│   │   ├── MultiTimeframeAnalyzer.js
+│   │   └── CorrelationAnalyzer.js
 │   ├── core/
-│   │   ├── TradingEngine.js        # Main trading logic
-│   │   ├── RiskManager.js          # Risk management
+│   │   ├── TradingEngine.js        # Main logic
+│   │   ├── AdaptiveRiskManager.js  # Dynamic risk management
 │   │   └── PortfolioTracker.js     # Portfolio tracking
 │   ├── strategies/
-│   │   ├── BaseStrategy.js         # Strategy base class
-│   │   ├── ScalpingStrategy.js     # Scalping implementation
-│   │   ├── DayTradingStrategy.js   # Day trading implementation
-│   │   └── SwingTradingStrategy.js # Swing trading implementation
+│   │   ├── BaseStrategy.js
+│   │   ├── ScalpingStrategy.js
+│   │   ├── DayTradingStrategy.js
+│   │   └── SwingTradingStrategy.js
 │   ├── ui/
-│   │   └── Dashboard.js            # PowerShell HUD
+│   │   └── InPlaceDashboard.js     # Real-time HUD
 │   └── utils/
-│       ├── AlpacaClient.js         # Alpaca API wrapper
-│       ├── ConfigManager.js        # Config management
-│       ├── DiscordNotifier.js      # Discord webhooks
-│       ├── MarketHours.js          # Market hours detection
-│       └── Logger.js               # Logging system
+│       ├── AlpacaClient.js
+│       ├── ConfigManager.js
+│       ├── DiscordNotifier.js
+│       ├── MarketHours.js
+│       └── TimeOfDayFilter.js
 └── logs/                            # Log files
 ```
 
@@ -228,3 +229,7 @@ MIT
 ## Disclaimer
 
 This software is for educational purposes. Use at your own risk. The authors are not responsible for any financial losses incurred through the use of this bot.
+
+---
+
+🤖 Built with Claude Code
