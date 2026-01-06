@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment variables (IMPORTANT - Contains API keys!)
+.env
+config.json
+
+# Logs
+*.log
+restart.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp

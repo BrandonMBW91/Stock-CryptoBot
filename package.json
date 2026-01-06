@@ -1,0 +1,25 @@
+{
+  "name": "alpaca-trading-bot",
+  "version": "1.0.0",
+  "description": "Sophisticated multi-strategy trading bot for Alpaca",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "restart": "node restart.js",
+    "backtest": "node backtest.js",
+    "test": "node src/test.js"
+  },
+  "dependencies": {
+    "@alpacahq/alpaca-trade-api": "^3.0.4",
+    "axios": "^1.6.0",
+    "chalk": "^5.3.0",
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.11.0",
+    "technicalindicators": "^3.1.0",
+    "moment-timezone": "^0.5.45",
+    "ws": "^8.16.0"
+  },
+  "author": "",
+  "license": "MIT"
+}
