@@ -19,19 +19,22 @@ export class ScalpingStrategy extends BaseStrategy {
       return { signal: 'NEUTRAL', strength: 0 };
     }
 
-    // Get multiple timeframes for confirmation
+    // Get multiple timeframes for optional confirmation (adds bonus if confirmed)
     const bars5m = await alpacaClient.getBars(symbol, '5Min', 100);
+    let mtfConfirmed = false;
 
-    // Multi-timeframe confirmation
+    // Multi-timeframe confirmation (optional - adds strength bonus)
     if (bars5m && bars5m.length >= 50) {
       const quick = multiTimeframeAnalyzer.quickCheck(
         this.getSignalFromBars(bars),
         this.getSignalFromBars(bars5m)
       );
 
-      if (!quick.confirmed) {
-        return { signal: 'NEUTRAL', strength: 0 };
-      }
+      mtfConfirmed = quick.confirmed;
+      // Don't require confirmation - just track it for bonus
+      // if (!quick.confirmed) {
+      //   return { signal: 'NEUTRAL', strength: 0 };
+      // }
     }
 
     // Use RSI slope instead of simple range checks
@@ -53,6 +56,11 @@ export class ScalpingStrategy extends BaseStrategy {
       finalStrength -= 20;
     } else if (rsiSlope.isBearish(rsiAnalysis) && analysis.signal === 'BUY') {
       finalStrength -= 20;
+    }
+
+    // Multi-timeframe bonus
+    if (mtfConfirmed) {
+      finalStrength += 10;
     }
 
     if (finalStrength >= this.minSignalStrength) {

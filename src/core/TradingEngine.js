@@ -264,7 +264,7 @@ export class TradingEngine {
 
         const signal = await strategy.analyze(symbol, bars, alpacaClient);
 
-        debugLog(`${symbol} ${strategy.name}: signal=${signal.signal}, strength=${signal.strength}`);
+        debugLog(`${symbol} ${strategy.name}: signal=${signal.signal}, strength=${signal.strength || 0}${signal.rsiSlope ? `, rsiSlope=${signal.rsiSlope.toFixed(2)}` : ''}`);
 
         if (signal.signal !== 'NEUTRAL' && signal.price) {
           dashboard.addSignal({

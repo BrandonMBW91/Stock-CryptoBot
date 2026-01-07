@@ -1,0 +1,183 @@
+[7:21:28 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:21:28 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:22:28 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:22:28 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:23:28 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:23:28 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:28:34 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:28:34 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:29:34 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:29:34 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:30:34 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:30:34 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:31:34 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:31:34 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:32:34 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:32:34 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:32:44 PM] Analyzing BTCUSD with 3 strategies
+[7:32:44 PM] Analyzing ETHUSD with 3 strategies
+[7:32:44 PM] Analyzing DOGEUSD with 3 strategies
+[7:32:44 PM] Analyzing LTCUSD with 3 strategies
+[7:32:45 PM] Analyzing SOLUSD with 3 strategies
+[7:32:45 PM] Analyzing AVAXUSD with 3 strategies
+[7:32:45 PM] Analyzing AAVEUSD with 3 strategies
+[7:32:45 PM] Analyzing LINKUSD with 3 strategies
+[7:32:45 PM] Analyzing DOTUSD with 3 strategies
+[7:32:45 PM] Analyzing UNIUSD with 3 strategies
+[7:32:45 PM] Analyzing SHIBUSD with 3 strategies
+[7:32:45 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:32:45 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:33:44 PM] Analyzing BTCUSD with 3 strategies
+[7:33:44 PM] Analyzing ETHUSD with 3 strategies
+[7:33:44 PM] Analyzing DOGEUSD with 3 strategies
+[7:33:45 PM] Analyzing LTCUSD with 3 strategies
+[7:33:45 PM] Analyzing SOLUSD with 3 strategies
+[7:33:45 PM] Analyzing AVAXUSD with 3 strategies
+[7:33:45 PM] Analyzing AAVEUSD with 3 strategies
+[7:33:45 PM] Analyzing LINKUSD with 3 strategies
+[7:33:45 PM] Analyzing DOTUSD with 3 strategies
+[7:33:45 PM] Analyzing UNIUSD with 3 strategies
+[7:33:45 PM] Analyzing SHIBUSD with 3 strategies
+[7:33:45 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:33:45 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:36:17 PM] Analyzing BTCUSD with 3 strategies
+[7:36:17 PM] Analyzing ETHUSD with 3 strategies
+[7:36:17 PM] Analyzing DOGEUSD with 3 strategies
+[7:36:17 PM] Analyzing LTCUSD with 3 strategies
+[7:36:17 PM] Analyzing SOLUSD with 3 strategies
+[7:36:17 PM] Analyzing AVAXUSD with 3 strategies
+[7:36:17 PM] Analyzing AAVEUSD with 3 strategies
+[7:36:18 PM] Analyzing LINKUSD with 3 strategies
+[7:36:18 PM] Analyzing DOTUSD with 3 strategies
+[7:36:18 PM] Analyzing UNIUSD with 3 strategies
+[7:36:18 PM] Analyzing SHIBUSD with 3 strategies
+[7:36:18 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:36:18 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:37:17 PM] Analyzing BTCUSD with 3 strategies
+[7:37:17 PM] Analyzing ETHUSD with 3 strategies
+[7:37:17 PM] Analyzing DOGEUSD with 3 strategies
+[7:37:17 PM] Analyzing LTCUSD with 3 strategies
+[7:37:18 PM] Analyzing SOLUSD with 3 strategies
+[7:37:18 PM] Analyzing AVAXUSD with 3 strategies
+[7:37:18 PM] Analyzing AAVEUSD with 3 strategies
+[7:37:18 PM] Analyzing LINKUSD with 3 strategies
+[7:37:19 PM] Analyzing DOTUSD with 3 strategies
+[7:37:19 PM] Analyzing UNIUSD with 3 strategies
+[7:37:19 PM] Analyzing SHIBUSD with 3 strategies
+[7:37:19 PM] ✓ Analysis complete: 0 signals from 11 assets
+[7:37:19 PM] ⚠️  NO SIGNALS - Check: multi-timeframe, time-of-day filter, or market is flat
+[7:39:34 PM] Analyzing BTCUSD with 3 strategies
+[7:39:34 PM] Analyzing ETHUSD with 3 strategies
+[7:39:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:39:34 PM] Analyzing LTCUSD with 3 strategies
+[7:39:34 PM] Analyzing SOLUSD with 3 strategies
+[7:39:34 PM] Analyzing AVAXUSD with 3 strategies
+[7:39:34 PM] Analyzing AAVEUSD with 3 strategies
+[7:39:35 PM] Analyzing LINKUSD with 3 strategies
+[7:39:35 PM] Analyzing DOTUSD with 3 strategies
+[7:39:35 PM] Analyzing UNIUSD with 3 strategies
+[7:39:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:39:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:39:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:40:34 PM] Analyzing BTCUSD with 3 strategies
+[7:40:34 PM] Analyzing ETHUSD with 3 strategies
+[7:40:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:40:35 PM] Analyzing LTCUSD with 3 strategies
+[7:40:35 PM] Analyzing SOLUSD with 3 strategies
+[7:40:35 PM] Analyzing AVAXUSD with 3 strategies
+[7:40:35 PM] Analyzing AAVEUSD with 3 strategies
+[7:40:35 PM] Analyzing LINKUSD with 3 strategies
+[7:40:35 PM] Analyzing DOTUSD with 3 strategies
+[7:40:35 PM] Analyzing UNIUSD with 3 strategies
+[7:40:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:40:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:40:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:41:34 PM] Analyzing BTCUSD with 3 strategies
+[7:41:34 PM] Analyzing ETHUSD with 3 strategies
+[7:41:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:41:34 PM] Analyzing LTCUSD with 3 strategies
+[7:41:34 PM] Analyzing SOLUSD with 3 strategies
+[7:41:34 PM] Analyzing AVAXUSD with 3 strategies
+[7:41:35 PM] Analyzing AAVEUSD with 3 strategies
+[7:41:35 PM] Analyzing LINKUSD with 3 strategies
+[7:41:35 PM] Analyzing DOTUSD with 3 strategies
+[7:41:35 PM] Analyzing UNIUSD with 3 strategies
+[7:41:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:41:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:41:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:42:34 PM] Analyzing BTCUSD with 3 strategies
+[7:42:34 PM] Analyzing ETHUSD with 3 strategies
+[7:42:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:42:34 PM] Analyzing LTCUSD with 3 strategies
+[7:42:34 PM] Analyzing SOLUSD with 3 strategies
+[7:42:34 PM] Analyzing AVAXUSD with 3 strategies
+[7:42:35 PM] Analyzing AAVEUSD with 3 strategies
+[7:42:35 PM] Analyzing LINKUSD with 3 strategies
+[7:42:35 PM] Analyzing DOTUSD with 3 strategies
+[7:42:35 PM] Analyzing UNIUSD with 3 strategies
+[7:42:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:42:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:42:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:43:34 PM] Analyzing BTCUSD with 3 strategies
+[7:43:34 PM] Analyzing ETHUSD with 3 strategies
+[7:43:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:43:34 PM] Analyzing LTCUSD with 3 strategies
+[7:43:34 PM] Analyzing SOLUSD with 3 strategies
+[7:43:35 PM] Analyzing AVAXUSD with 3 strategies
+[7:43:35 PM] Analyzing AAVEUSD with 3 strategies
+[7:43:35 PM] Analyzing LINKUSD with 3 strategies
+[7:43:35 PM] Analyzing DOTUSD with 3 strategies
+[7:43:35 PM] Analyzing UNIUSD with 3 strategies
+[7:43:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:43:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:43:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:44:34 PM] Analyzing BTCUSD with 3 strategies
+[7:44:34 PM] Analyzing ETHUSD with 3 strategies
+[7:44:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:44:34 PM] Analyzing LTCUSD with 3 strategies
+[7:44:34 PM] Analyzing SOLUSD with 3 strategies
+[7:44:35 PM] Analyzing AVAXUSD with 3 strategies
+[7:44:35 PM] Analyzing AAVEUSD with 3 strategies
+[7:44:35 PM] Analyzing LINKUSD with 3 strategies
+[7:44:35 PM] Analyzing DOTUSD with 3 strategies
+[7:44:35 PM] Analyzing UNIUSD with 3 strategies
+[7:44:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:44:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:44:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:45:34 PM] Analyzing BTCUSD with 3 strategies
+[7:45:34 PM] Analyzing ETHUSD with 3 strategies
+[7:45:34 PM] Analyzing DOGEUSD with 3 strategies
+[7:45:34 PM] Analyzing LTCUSD with 3 strategies
+[7:45:34 PM] Analyzing SOLUSD with 3 strategies
+[7:45:35 PM] Analyzing AVAXUSD with 3 strategies
+[7:45:35 PM] Analyzing AAVEUSD with 3 strategies
+[7:45:35 PM] Analyzing LINKUSD with 3 strategies
+[7:45:35 PM] Analyzing DOTUSD with 3 strategies
+[7:45:35 PM] Analyzing UNIUSD with 3 strategies
+[7:45:35 PM] Analyzing SHIBUSD with 3 strategies
+[7:45:35 PM] ✓ Analysis: 5 signals (5 TEST) from 11 assets
+[7:45:35 PM] Top 3: BTCUSD=52, ETHUSD=48, SOLUSD=45
+[7:45:54 PM] Analyzing BTCUSD with 3 strategies
+[7:45:54 PM] Analyzing ETHUSD with 3 strategies
+[7:45:54 PM] Analyzing DOGEUSD with 3 strategies
+[7:45:55 PM] Analyzing LTCUSD with 3 strategies
+[7:45:55 PM] Analyzing SOLUSD with 3 strategies
+[7:45:55 PM] Analyzing AVAXUSD with 3 strategies
+[7:45:55 PM] Analyzing AAVEUSD with 3 strategies
+[7:45:55 PM] Analyzing LINKUSD with 3 strategies
+[7:45:56 PM] Analyzing DOTUSD with 3 strategies
+[7:45:56 PM] Analyzing UNIUSD with 3 strategies
+[7:45:56 PM] Analyzing SHIBUSD with 3 strategies
+[7:45:56 PM] ✓ Analysis: 0 signals from 11 assets
+[7:46:54 PM] Analyzing BTCUSD with 3 strategies
+[7:46:54 PM] Analyzing ETHUSD with 3 strategies
+[7:46:54 PM] Analyzing DOGEUSD with 3 strategies
+[7:46:54 PM] Analyzing LTCUSD with 3 strategies
+[7:46:55 PM] Analyzing SOLUSD with 3 strategies
+[7:46:55 PM] Analyzing AVAXUSD with 3 strategies
+[7:46:55 PM] Analyzing AAVEUSD with 3 strategies
+[7:46:55 PM] Analyzing LINKUSD with 3 strategies
+[7:46:55 PM] Analyzing DOTUSD with 3 strategies
+[7:46:55 PM] Analyzing UNIUSD with 3 strategies
+[7:46:55 PM] Analyzing SHIBUSD with 3 strategies
+[7:46:55 PM] ✓ Analysis: 0 signals from 11 assets

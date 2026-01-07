@@ -18,18 +18,19 @@ export class SwingTradingStrategy extends BaseStrategy {
       return { signal: 'NEUTRAL', strength: 0 };
     }
 
-    // Get multiple timeframes for confirmation
+    // Get multiple timeframes for optional confirmation (adds bonus if confirmed)
     const bars4h = bars; // Already have 4h
     const bars1d = await alpacaClient.getBars(symbol, '1Day', 100);
 
-    // Multi-timeframe confirmation (4h + daily)
+    // Multi-timeframe confirmation (optional - adds strength bonus if confirmed)
     const mtfAnalysis = await multiTimeframeAnalyzer.analyzeWithConfirmation(
       symbol, bars4h, bars4h, bars1d, alpacaClient
     );
 
-    if (!mtfAnalysis.confirmed) {
-      return { signal: 'NEUTRAL', strength: 0 };
-    }
+    // Don't require confirmation - just use it as a bonus
+    // if (!mtfAnalysis.confirmed) {
+    //   return { signal: 'NEUTRAL', strength: 0 };
+    // }
 
     // Use RSI slope for better signal detection
     const rsiAnalysis = rsiSlope.analyze(bars, 14, 3);
@@ -78,8 +79,10 @@ export class SwingTradingStrategy extends BaseStrategy {
       strength += 5;
     }
 
-    // Multi-timeframe bonus
-    strength += mtfAnalysis.strength ? 10 : 0;
+    // Multi-timeframe bonus (only if confirmed)
+    if (mtfAnalysis && mtfAnalysis.confirmed) {
+      strength += 15; // Bonus for multi-timeframe confirmation
+    }
 
     if (strength >= this.minSignalStrength) {
       return {
