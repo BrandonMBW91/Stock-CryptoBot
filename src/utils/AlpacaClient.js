@@ -113,7 +113,14 @@ class AlpacaClient {
 
       return barData;
     } catch (error) {
-      console.error(`❌ Failed to get bars for ${symbol}:`, error.message);
+      const errorMsg = `❌ Failed to get bars for ${symbol}: ${error.message}`;
+      console.error(errorMsg);
+
+      // Also log to file so we can see it
+      const { appendFileSync } = await import('fs');
+      try {
+        appendFileSync('./bot-debug.txt', `[${new Date().toLocaleTimeString()}] ${errorMsg}\n`);
+      } catch (e) {}
 
       if (error.message.includes('rate limit') || error.message.includes('429')) {
         console.error(`🚨 RATE LIMIT HIT! Alpaca is blocking API requests.`);
