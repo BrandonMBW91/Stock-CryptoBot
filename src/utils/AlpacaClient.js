@@ -84,11 +84,19 @@ class AlpacaClient {
     }
 
     try {
-      const bars = await this.alpaca.getBarsV2(symbol, {
+      // Add feed parameter for crypto - Alpaca requires this for crypto symbols
+      const options = {
         limit: limit,
         timeframe: timeframe,
         adjustment: 'raw'
-      });
+      };
+
+      // If crypto symbol (contains /), add feed parameter
+      if (symbol.includes('/')) {
+        options.feed = 'us';  // Try 'us' feed for crypto
+      }
+
+      const bars = await this.alpaca.getBarsV2(symbol, options);
 
       const barData = [];
       for await (let bar of bars) {
