@@ -72,6 +72,17 @@ class AlpacaClient {
   }
 
   async getBars(symbol, timeframe, limit = 100) {
+    // Simple cache to reduce duplicate API calls within same scan cycle (1 minute TTL)
+    const cacheKey = `${symbol}_${timeframe}_${limit}`;
+    const now = Date.now();
+
+    if (this._barsCache && this._barsCache[cacheKey]) {
+      const cached = this._barsCache[cacheKey];
+      if (now - cached.timestamp < 60000) { // 1 minute cache
+        return cached.data;
+      }
+    }
+
     try {
       const bars = await this.alpaca.getBarsV2(symbol, {
         limit: limit,
@@ -86,11 +97,18 @@ class AlpacaClient {
 
       if (barData.length === 0) {
         console.log(`⚠️  NO BARS returned for ${symbol} ${timeframe} (limit=${limit})`);
+      } else {
+        // Cache successful results
+        if (!this._barsCache) this._barsCache = {};
+        this._barsCache[cacheKey] = { data: barData, timestamp: now };
       }
 
       return barData;
     } catch (error) {
-      console.error(`Failed to get bars for ${symbol}:`, error.message);
+      console.error(`❌ Failed to get bars for ${symbol}:`, error.message);
+      if (error.message.includes('rate limit') || error.message.includes('429')) {
+        console.error(`🚨 RATE LIMIT HIT! Alpaca is blocking API requests.`);
+      }
       return [];
     }
   }
