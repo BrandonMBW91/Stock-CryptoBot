@@ -49,14 +49,14 @@ export class DayTradingStrategy extends BaseStrategy {
       signal = 'SELL';
       strength = rsiAnalysis.strength || 60;
     } else if (rsiAnalysis) {
-      // Fallback: Use RSI levels even if slope is flat
+      // Fallback: Use RSI levels even if slope is flat (VERY WIDE for Market Heat visibility)
       const currentRSI = rsiAnalysis.current;
-      if (currentRSI < 35) {
+      if (currentRSI < 48) {
         signal = 'BUY';
-        strength = 40; // Lower strength for flat slope signals
-      } else if (currentRSI > 65) {
+        strength = 30 + (48 - currentRSI); // Strength increases as RSI gets lower
+      } else if (currentRSI > 52) {
         signal = 'SELL';
-        strength = 40;
+        strength = 30 + (currentRSI - 52); // Strength increases as RSI gets higher
       }
     }
 
