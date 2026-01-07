@@ -43,13 +43,23 @@ export class SwingTradingStrategy extends BaseStrategy {
     let signal = 'NEUTRAL';
     let strength = 0;
 
-    // RSI slope-based signals
+    // RSI slope-based signals (primary)
     if (rsiSlope.isBullish(rsiAnalysis)) {
       signal = 'BUY';
       strength = rsiAnalysis.strength || 70;
     } else if (rsiSlope.isBearish(rsiAnalysis)) {
       signal = 'SELL';
       strength = rsiAnalysis.strength || 70;
+    } else if (rsiAnalysis) {
+      // Fallback: Use RSI levels even if slope is flat
+      const currentRSI = rsiAnalysis.current;
+      if (currentRSI < 35) {
+        signal = 'BUY';
+        strength = 45; // Lower strength for flat slope signals
+      } else if (currentRSI > 65) {
+        signal = 'SELL';
+        strength = 45;
+      }
     }
 
     // SMA golden/death cross (stronger for swing trading)
