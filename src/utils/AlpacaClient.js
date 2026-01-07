@@ -83,6 +83,11 @@ class AlpacaClient {
       for await (let bar of bars) {
         barData.push(bar);
       }
+
+      if (barData.length === 0) {
+        console.log(`⚠️  NO BARS returned for ${symbol} ${timeframe} (limit=${limit})`);
+      }
+
       return barData;
     } catch (error) {
       console.error(`Failed to get bars for ${symbol}:`, error.message);
