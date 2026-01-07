@@ -85,10 +85,11 @@ export class DayTradingStrategy extends BaseStrategy {
     }
 
     if (strength >= this.minSignalStrength) {
+      const currentPrice = bars[bars.length - 1].c || bars[bars.length - 1].ClosePrice || bars[bars.length - 1].close;
       return {
         signal: signal,
         strength: Math.min(strength, 100),
-        price: bars[bars.length - 1].c,
+        price: currentPrice,
         rsi: rsiAnalysis.current,
         rsiSlope: rsiAnalysis.slope,
         rsiDirection: rsiAnalysis.direction,

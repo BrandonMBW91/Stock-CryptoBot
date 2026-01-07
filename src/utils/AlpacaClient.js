@@ -106,6 +106,15 @@ class AlpacaClient {
       if (barData.length === 0) {
         console.log(`⚠️  NO BARS returned for ${symbol} ${timeframe} (limit=${limit})`);
       } else {
+        // Debug: Log bar structure for first bar
+        if (barData.length > 0) {
+          const { appendFileSync } = await import('fs');
+          try {
+            const firstBar = barData[0];
+            appendFileSync('./bot-debug.txt', `[${new Date().toLocaleTimeString()}] 📊 ${symbol} bar keys: ${Object.keys(firstBar).join(', ')}\n`);
+          } catch (e) {}
+        }
+
         // Cache successful results
         if (!this._barsCache) this._barsCache = {};
         this._barsCache[cacheKey] = { data: barData, timestamp: now };

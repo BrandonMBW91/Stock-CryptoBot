@@ -158,6 +158,7 @@ export class TradingEngine {
       if (allHeatData.length > 0) {
         const strongest = allHeatData.sort((a, b) => b.strength - a.strength).slice(0, 3);
         debugLog(`Top 3: ${strongest.map(h => `${h.symbol}=${h.strength.toFixed(0)}`).join(', ')}`);
+        debugLog(`Calling updateMarketHeat with ${allHeatData.length} items`);
       }
       dashboard.updateMarketHeat(allHeatData);
 
@@ -269,7 +270,13 @@ export class TradingEngine {
         const signal = await strategy.analyze(symbol, bars, alpacaClient);
         debugLog(`${symbol} ${strategy.name}: signal=${signal.signal}, strength=${signal.strength || 0}${signal.rsiSlope ? `, rsiSlope=${signal.rsiSlope.toFixed(2)}` : ''}`);
 
+        // Debug: Check if signal should be added to heat
+        if (signal.signal !== 'NEUTRAL') {
+          debugLog(`  -> ${symbol} has signal ${signal.signal}, price=${signal.price}, will add? ${signal.price ? 'YES' : 'NO-MISSING-PRICE'}`);
+        }
+
         if (signal.signal !== 'NEUTRAL' && signal.price) {
+          debugLog(`  -> Adding ${symbol} to heatItems`);
           dashboard.addSignal({
             symbol: symbol,
             signal: signal.signal,
@@ -294,6 +301,7 @@ export class TradingEngine {
         }
       }
 
+      debugLog(`${symbol}: returning ${heatItems.length} heat items`);
       return heatItems;
     } catch (error) {
       dashboard.log(`Error analyzing ${symbol}: ${error.message}`, 'error');

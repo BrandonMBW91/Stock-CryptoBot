@@ -63,7 +63,7 @@ export class SwingTradingStrategy extends BaseStrategy {
     }
 
     // SMA golden/death cross (stronger for swing trading)
-    const currentPrice = bars[bars.length - 1].c;
+    const currentPrice = bars[bars.length - 1].c || bars[bars.length - 1].ClosePrice || bars[bars.length - 1].close;
     if (currentPrice > sma50 && sma50 > sma200 && signal === 'BUY') {
       strength += 15; // Golden cross bonus
     } else if (currentPrice < sma50 && sma50 < sma200 && signal === 'SELL') {
@@ -95,10 +95,11 @@ export class SwingTradingStrategy extends BaseStrategy {
     }
 
     if (strength >= this.minSignalStrength) {
+      const priceToUse = currentPrice || bars[bars.length - 1].ClosePrice || bars[bars.length - 1].close;
       return {
         signal: signal,
         strength: Math.min(strength, 100),
-        price: currentPrice,
+        price: priceToUse,
         rsi: rsiAnalysis.current,
         rsiSlope: rsiAnalysis.slope,
         rsiDirection: rsiAnalysis.direction,

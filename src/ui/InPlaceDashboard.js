@@ -342,10 +342,26 @@ export class InPlaceDashboard {
   updateMarketHeat(heatData) {
     // heatData should be array of: { symbol, direction, strength, indicator }
     // Show signals in the "warming up" zone (20-54) before they reach trade threshold (55+)
-    this.tradingData.marketHeat = heatData
-      .filter(h => h.strength >= 20)  // Show all signals 20+
+    const debugLog = (msg) => {
+      const { appendFileSync } = require('fs');
+      try {
+        appendFileSync('./bot-debug.txt', `[${new Date().toLocaleTimeString()}] ${msg}\n`);
+      } catch (e) {}
+    };
+
+    debugLog(`📊 updateMarketHeat called with ${heatData.length} items`);
+
+    const filtered = heatData.filter(h => h.strength >= 20);
+    debugLog(`📊 After filter (>=20): ${filtered.length} items`);
+
+    this.tradingData.marketHeat = filtered
       .sort((a, b) => b.strength - a.strength)
       .slice(0, 10);
+
+    debugLog(`📊 Final marketHeat array: ${this.tradingData.marketHeat.length} items`);
+    if (this.tradingData.marketHeat.length > 0) {
+      debugLog(`📊 Market Heat contents: ${this.tradingData.marketHeat.map(h => `${h.symbol}:${h.strength.toFixed(0)}`).join(', ')}`);
+    }
   }
 
   addTrade(trade) {
