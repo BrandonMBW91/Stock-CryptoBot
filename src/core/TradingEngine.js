@@ -259,11 +259,12 @@ export class TradingEngine {
         }
 
         if (!bars || bars.length === 0) {
+          debugLog(`${symbol} ${strategy.name}: NO BARS (got ${bars?.length || 0})`);
           continue;
         }
 
+        debugLog(`${symbol} ${strategy.name}: calling analyze() with ${bars.length} bars...`);
         const signal = await strategy.analyze(symbol, bars, alpacaClient);
-
         debugLog(`${symbol} ${strategy.name}: signal=${signal.signal}, strength=${signal.strength || 0}${signal.rsiSlope ? `, rsiSlope=${signal.rsiSlope.toFixed(2)}` : ''}`);
 
         if (signal.signal !== 'NEUTRAL' && signal.price) {
