@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import { marketHours } from '../utils/MarketHours.js';
 
 export class InPlaceDashboard {
   constructor() {
@@ -13,6 +14,13 @@ export class InPlaceDashboard {
     };
     this.frameCount = 0;
     this.nextAnalysisTime = null;
+    this.platformName = 'ALPACA'; // Default, can be changed
+    this.tradingMode = 'LIVE TRADING';
+  }
+
+  setPlatform(platform, mode) {
+    this.platformName = platform;
+    this.tradingMode = mode;
   }
 
   initialize() {
@@ -31,8 +39,8 @@ export class InPlaceDashboard {
   }
 
   getProgressBar(percent, width = 30) {
-    const filled = Math.round((percent / 100) * width);
-    const empty = width - filled;
+    const filled = Math.min(width, Math.max(0, Math.round((percent / 100) * width)));
+    const empty = Math.max(0, width - filled);
 
     let color;
     if (percent >= 80) color = chalk.green;
@@ -49,8 +57,8 @@ export class InPlaceDashboard {
   }
 
   getHeatBar(percent, width = 20) {
-    const filled = Math.round((percent / 100) * width);
-    const empty = width - filled;
+    const filled = Math.min(width, Math.max(0, Math.round((percent / 100) * width)));
+    const empty = Math.max(0, width - filled);
 
     let color;
     if (percent >= 90) color = chalk.hex('#FF0000'); // Red hot
@@ -77,7 +85,7 @@ export class InPlaceDashboard {
 
     // Count emoji characters (they take 2 visual spaces but count as 1-2 chars)
     // Common emojis used in dashboard
-    const emojiCount = (stripped.match(/[💰📊✅🛑▲▼🔥⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏🌡️♨️💨❄️📈📉🟢🔴🎯💼]/g) || []).length;
+    const emojiCount = (stripped.match(/[💰📊✅🛑▲▼🔥⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏🌡️♨️💨❄️📈📉🟢🔴🎯💼🔒🟡]/g) || []).length;
 
     // Adjust for emoji width (each emoji takes roughly 1 extra space)
     const visualLength = stripped.length + emojiCount;
@@ -86,16 +94,20 @@ export class InPlaceDashboard {
   }
 
   render() {
-    this.frameCount++;
+    try {
+      this.frameCount++;
 
-    // Move to top-left
-    this.moveCursor(1, 1);
+      // Move to top-left
+      this.moveCursor(1, 1);
 
-    const lines = [];
+      const lines = [];
 
-    // Banner
+    // Banner - Dynamic based on platform
+    const title = `🚀 ${this.platformName} TRADING BOT v2.0 - ${this.tradingMode} 🚀`;
+    const titlePadding = Math.floor((116 - title.length) / 2); // 116 is inner width
+    const paddedTitle = ' '.repeat(titlePadding) + title + ' '.repeat(116 - title.length - titlePadding);
     lines.push(chalk.hex('#00D9FF')('╔════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗'));
-    lines.push(chalk.hex('#00D9FF')('║') + chalk.hex('#FFD700').bold('                           🚀 ALPACA TRADING BOT v2.0 - LIVE TRADING 🚀                                       ') + chalk.hex('#00D9FF')('║'));
+    lines.push(chalk.hex('#00D9FF')('║') + chalk.hex('#FFD700').bold(paddedTitle) + chalk.hex('#00D9FF')('║'));
     lines.push(chalk.hex('#00D9FF')('╚════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝'));
     lines.push('');
 
@@ -105,56 +117,84 @@ export class InPlaceDashboard {
 
     if (p.equity) {
       const plColor = p.dailyPL >= 0 ? chalk.green : chalk.red;
-      const plSymbol = p.dailyPL >= 0 ? '▲' : '▼';
-      const statusIcon = p.emergencyStop ? '🛑' : '✅';
+      const plSymbol = p.dailyPL >= 0 ? '+' : '-';
       const statusColor = p.emergencyStop ? chalk.red : chalk.green;
       const statusText = p.emergencyStop ? 'EMERGENCY STOP' : 'ACTIVE';
       const positionUsage = (p.positions / (p.maxPositions || 10)) * 100;
 
       lines.push(chalk.hex('#00D9FF')('╔═══════════════════════════════════════════════════╦═══════════════════════════════════════════════════╗'));
 
-      const leftHeader = this.padColumn(chalk.hex('#FFD700').bold('💰 PORTFOLIO STATUS'));
-      const rightHeader = this.padColumn(chalk.hex('#FFD700').bold('📊 DAILY PERFORMANCE'));
+      const leftHeader = this.padColumn(chalk.hex('#FFD700').bold('PORTFOLIO STATUS'));
+      const rightHeader = this.padColumn(chalk.hex('#FFD700').bold('DAILY PERFORMANCE'));
       lines.push(chalk.hex('#00D9FF')('║ ') + leftHeader + chalk.hex('#00D9FF')('║ ') + rightHeader + chalk.hex('#00D9FF')('║'));
 
       lines.push(chalk.hex('#00D9FF')('╠═══════════════════════════════════════════════════╬═══════════════════════════════════════════════════╣'));
 
-      const leftRow1 = this.padColumn(chalk.cyan('Status: ') + statusIcon + ' ' + statusColor.bold(statusText));
-      const rightRow1 = this.padColumn(chalk.cyan('Total Trades: ') + chalk.yellow((s.totalTrades || 0).toString()));
+      // Status with badge styling
+      const statusBadge = p.emergencyStop ? chalk.bgRed.white.bold(' STOPPED ') : chalk.bgGreen.black.bold(' ACTIVE ');
+      const leftRow1 = this.padColumn(chalk.hex('#00D9FF')('Status: ') + statusBadge);
+      const rightRow1 = this.padColumn(chalk.hex('#00D9FF')('Today: ') + chalk.hex('#FFD700').bold((s.totalTrades || 0)) + chalk.gray(' trades  ') + chalk.hex('#00D9FF')('All-Time: ') + chalk.hex('#FFD700').bold((s.lifetimeTotal || 0)));
       lines.push(chalk.hex('#00D9FF')('║ ') + leftRow1 + chalk.hex('#00D9FF')('║ ') + rightRow1 + chalk.hex('#00D9FF')('║'));
 
-      const leftRow2 = this.padColumn(chalk.cyan('Equity: ') + chalk.hex('#00FF00').bold(`$${p.equity.toFixed(2)}`));
-      const rightRow2 = this.padColumn(chalk.cyan('Wins: ') + chalk.green((s.winningTrades || 0)) + chalk.cyan('  Losses: ') + chalk.red((s.losingTrades || 0)));
+      // Equity with vibrant colors
+      const equityColor = p.dailyPL >= 0 ? chalk.hex('#00FF88') : chalk.hex('#FF6B6B');
+      const leftRow2 = this.padColumn(chalk.hex('#00D9FF')('Equity: ') + equityColor.bold(`$${p.equity.toFixed(2)}`));
+      const rightRow2 = this.padColumn(chalk.hex('#00D9FF')('Today W/L: ') + chalk.hex('#00FF88')((s.winningTrades || 0)) + chalk.hex('#666666')('/') + chalk.hex('#FF6B6B')((s.losingTrades || 0)) + chalk.gray('  ') + chalk.hex('#00D9FF')('All W/L: ') + chalk.hex('#00FF88')((s.lifetimeWins || 0)) + chalk.hex('#666666')('/') + chalk.hex('#FF6B6B')((s.lifetimeLosses || 0)));
       lines.push(chalk.hex('#00D9FF')('║ ') + leftRow2 + chalk.hex('#00D9FF')('║ ') + rightRow2 + chalk.hex('#00D9FF')('║'));
 
-      const leftRow3 = this.padColumn(chalk.cyan('Buying Power: ') + chalk.yellow(`$${p.buyingPower.toFixed(2)}`));
-      const rightRow3 = this.padColumn(chalk.cyan('Win Rate: ') + chalk.hex('#FFD700')(`${(s.winRate || 0).toFixed(1)}%`));
+      // Buying power with cyan highlight
+      const leftRow3 = this.padColumn(chalk.hex('#00D9FF')('Buying Power: ') + chalk.hex('#4ECDC4').bold(`$${p.buyingPower.toFixed(2)}`));
+      const rightRow3 = this.padColumn(chalk.hex('#00D9FF')('Today Rate: ') + chalk.hex('#FFD700').bold(`${(s.winRate || 0).toFixed(1)}%`) + chalk.gray('  ') + chalk.hex('#00D9FF')('All Rate: ') + chalk.hex('#FFD700').bold(`${(s.lifetimeWinRate || 0).toFixed(1)}%`));
       lines.push(chalk.hex('#00D9FF')('║ ') + leftRow3 + chalk.hex('#00D9FF')('║ ') + rightRow3 + chalk.hex('#00D9FF')('║'));
 
-      const leftRow4 = this.padColumn(chalk.cyan('Daily P/L: ') + plSymbol + ' ' + plColor.bold(`$${Math.abs(p.dailyPL).toFixed(2)}`) + ' ' + plColor(`(${p.dailyPLPercent >= 0 ? '+' : ''}${p.dailyPLPercent.toFixed(2)}%)`));
-      const rightRow4 = this.padColumn(chalk.cyan('Total P/L: ') + plColor.bold(`${p.dailyPL >= 0 ? '+' : ''}$${(s.totalPL || 0).toFixed(2)}`));
+      // P/L with enhanced colors
+      const plColorEnhanced = p.dailyPL >= 0 ? chalk.hex('#00FF88') : chalk.hex('#FF6B6B');
+      const lifetimePLColor = (s.lifetimeTotalPL || 0) >= 0 ? chalk.hex('#00FF88') : chalk.hex('#FF6B6B');
+      const leftRow4 = this.padColumn(chalk.hex('#00D9FF')('Daily P/L: ') + plColorEnhanced.bold(`${plSymbol}$${Math.abs(p.dailyPL).toFixed(2)}`) + ' ' + plColorEnhanced(`(${p.dailyPLPercent >= 0 ? '+' : ''}${p.dailyPLPercent.toFixed(2)}%)`));
+      const rightRow4 = this.padColumn(chalk.hex('#00D9FF')('Today P/L: ') + plColorEnhanced.bold(`${p.dailyPL >= 0 ? '+' : ''}$${(s.totalPL || 0).toFixed(2)}`) + chalk.gray('  ') + chalk.hex('#00D9FF')('All P/L: ') + lifetimePLColor.bold(`${(s.lifetimeTotalPL || 0) >= 0 ? '+' : ''}$${(s.lifetimeTotalPL || 0).toFixed(2)}`));
       lines.push(chalk.hex('#00D9FF')('║ ') + leftRow4 + chalk.hex('#00D9FF')('║ ') + rightRow4 + chalk.hex('#00D9FF')('║'));
 
-      const leftRow5 = this.padColumn(chalk.cyan('Positions: ') + chalk.yellow(`${p.positions}/${p.maxPositions || 10}`));
+      const leftRow5 = this.padColumn(chalk.hex('#00D9FF')('Positions: ') + chalk.hex('#FFD700').bold(`${p.positions}`) + chalk.gray('/') + chalk.hex('#666666')(`${p.maxPositions || 10}`));
 
-      // Trade indicator - show countdown to next analysis or hot signal alert
+      // Market status with colorful badges
+      const isOpen = marketHours.isMarketOpen();
+      const isPreMarket = marketHours.isPreMarket();
+      const isWeekend = marketHours.isWeekend();
+
+      let marketStatusText = '';
+      if (isWeekend) {
+        const timeUntil = marketHours.getTimeUntilMarketOpen();
+        marketStatusText = chalk.hex('#00D9FF')('Market: ') + chalk.hex('#666666')(`CLOSED ${timeUntil.hours}h ${timeUntil.minutes}m`);
+      } else if (isOpen) {
+        const timeUntil = marketHours.getTimeUntilMarketClose();
+        marketStatusText = chalk.hex('#00D9FF')('Market: ') + chalk.hex('#00FF88').bold(`OPEN `) + chalk.hex('#00FF88')(`${timeUntil.hours}h ${timeUntil.minutes}m`);
+      } else if (isPreMarket) {
+        const timeUntil = marketHours.getTimeUntilMarketOpen();
+        marketStatusText = chalk.hex('#00D9FF')('Market: ') + chalk.hex('#FFD700')(`PRE ${timeUntil.hours}h ${timeUntil.minutes}m`);
+      } else {
+        const timeUntil = marketHours.getTimeUntilMarketOpen();
+        marketStatusText = chalk.hex('#00D9FF')('Market: ') + chalk.hex('#666666')(`CLOSED ${timeUntil.hours}h ${timeUntil.minutes}m`);
+      }
+
+      const rightRow5 = this.padColumn(marketStatusText);
+      lines.push(chalk.hex('#00D9FF')('║ ') + leftRow5 + chalk.hex('#00D9FF')('║ ') + rightRow5 + chalk.hex('#00D9FF')('║'));
+
+      const leftRow6 = this.padColumn(this.getProgressBar(positionUsage, 45) + ' ' + chalk.gray(`${positionUsage.toFixed(0)}%`));
+
+      // Trade indicator - compact
       let activityText = '';
       const hotSignalCount = this.tradingData.hotSignals.length;
 
       if (hotSignalCount > 0) {
-        activityText = chalk.cyan('Activity: ') + chalk.hex('#FF4500')('🔥 ') + chalk.red.bold(`${hotSignalCount} HOT`) + chalk.hex('#FF4500')(' 🔥');
+        activityText = chalk.cyan('Scan: ') + chalk.red.bold(`${hotSignalCount} HOT SIGNALS`);
       } else if (this.nextAnalysisTime) {
         const secondsUntil = Math.max(0, Math.floor((this.nextAnalysisTime - Date.now()) / 1000));
-        activityText = chalk.cyan('Activity: ') + this.getSpinner() + chalk.gray(` Next scan in ${secondsUntil}s`);
+        activityText = chalk.cyan('Scan: ') + this.getSpinner() + chalk.gray(` ${secondsUntil}s`);
       } else {
-        activityText = chalk.cyan('Activity: ') + this.getSpinner() + chalk.gray(' Analyzing...');
+        activityText = chalk.cyan('Scan: ') + this.getSpinner() + chalk.gray(' analyzing');
       }
 
-      const rightRow5 = this.padColumn(activityText);
-      lines.push(chalk.hex('#00D9FF')('║ ') + leftRow5 + chalk.hex('#00D9FF')('║ ') + rightRow5 + chalk.hex('#00D9FF')('║'));
-
-      const leftRow6 = this.padColumn(this.getProgressBar(positionUsage, 45) + ' ' + chalk.gray(`${positionUsage.toFixed(0)}%`));
-      const rightRow6 = this.padColumn('');
+      const rightRow6 = this.padColumn(activityText);
       lines.push(chalk.hex('#00D9FF')('║ ') + leftRow6 + chalk.hex('#00D9FF')('║ ') + rightRow6 + chalk.hex('#00D9FF')('║'));
 
       lines.push(chalk.hex('#00D9FF')('╚═══════════════════════════════════════════════════╩═══════════════════════════════════════════════════╝'));
@@ -168,8 +208,8 @@ export class InPlaceDashboard {
     // Positions and Market Heat side by side
     lines.push(chalk.hex('#00D9FF')('╔═══════════════════════════════════════════════════╦═══════════════════════════════════════════════════╗'));
 
-    const leftHeader = this.padColumn(chalk.hex('#FFD700').bold('📈 OPEN POSITIONS'));
-    const rightHeader = this.padColumn(chalk.hex('#FFD700').bold('🔥 MARKET HEAT'));
+    const leftHeader = this.padColumn(chalk.hex('#FFD700').bold('OPEN POSITIONS'));
+    const rightHeader = this.padColumn(chalk.hex('#FFD700').bold('MARKET HEAT'));
     lines.push(chalk.hex('#00D9FF')('║ ') + leftHeader + chalk.hex('#00D9FF')('║ ') + rightHeader + chalk.hex('#00D9FF')('║'));
 
     lines.push(chalk.hex('#00D9FF')('╠═══════════════════════════════════════════════════╬═══════════════════════════════════════════════════╣'));
@@ -197,11 +237,11 @@ export class InPlaceDashboard {
           const pl = parseFloat(pos.unrealized_pl);
           const plPercent = parseFloat(pos.unrealized_plpc) * 100;
           const plColor = pl >= 0 ? chalk.green : chalk.red;
-          const plIcon = pl >= 0 ? '📈' : '📉';
+          const plIcon = pl >= 0 ? '+' : '-';
 
           leftContent =
             plIcon + ' ' +
-            chalk.yellow(pos.symbol.padEnd(6)) + ' ' +
+            chalk.yellow(pos.symbol.padEnd(5)) + ' ' +
             chalk.white(pos.qty.toString().padEnd(4)) + ' ' +
             chalk.white(`$${parseFloat(pos.avg_entry_price).toFixed(2)}`.padEnd(8)) + ' ' +
             plColor(`${pl >= 0 ? '+' : ''}$${pl.toFixed(2)}`.padEnd(9)) + ' ' +
@@ -296,11 +336,19 @@ export class InPlaceDashboard {
       chalk.gray('  │  ') + this.getSpinner() + chalk.cyan(' Live')
     );
 
-    // Print all lines
-    for (let i = 0; i < lines.length; i++) {
-      this.moveCursor(i + 1, 1);
-      this.clearLine();
-      process.stdout.write(lines[i]);
+      // Print all lines
+      for (let i = 0; i < lines.length; i++) {
+        this.moveCursor(i + 1, 1);
+        this.clearLine();
+        process.stdout.write(lines[i]);
+      }
+    } catch (error) {
+      // Silently log render errors to avoid breaking the dashboard
+      import('fs').then(({ appendFileSync }) => {
+        try {
+          appendFileSync('./bot-debug.txt', `[${new Date().toLocaleTimeString()}] Dashboard render error: ${error.message}\n`);
+        } catch (e) {}
+      });
     }
   }
 
@@ -343,10 +391,11 @@ export class InPlaceDashboard {
     // heatData should be array of: { symbol, direction, strength, indicator }
     // Show signals in the "warming up" zone (20-54) before they reach trade threshold (55+)
     const debugLog = (msg) => {
-      const { appendFileSync } = require('fs');
-      try {
-        appendFileSync('./bot-debug.txt', `[${new Date().toLocaleTimeString()}] ${msg}\n`);
-      } catch (e) {}
+      import('node:fs').then(({ appendFileSync }) => {
+        try {
+          appendFileSync('./bot-debug.txt', `[${new Date().toLocaleTimeString()}] ${msg}\n`);
+        } catch (e) {}
+      }).catch(() => {});
     };
 
     debugLog(`📊 updateMarketHeat called with ${heatData.length} items`);

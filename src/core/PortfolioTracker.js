@@ -1,22 +1,31 @@
-import { alpacaClient } from '../utils/AlpacaClient.js';
 import { discordNotifier } from '../utils/DiscordNotifier.js';
+import { historicalDataManager } from './HistoricalDataManager.js';
 
 export class PortfolioTracker {
   constructor() {
     this.trades = [];
     this.dailyTrades = [];
     this.closedPositions = [];
+    this.allTimeClosedPositions = []; // Lifetime tracking (in-memory)
     this.realizedPL = 0;
     this.dailyRealizedPL = 0;
     this.startingEquity = 0;
     this.dailyStartEquity = 0;
     this.openPositionMap = new Map(); // Track entry details for realized P/L
+    this.client = null; // Will be set by TradingEngine
+  }
+
+  setClient(client) {
+    this.client = client;
   }
 
   async initialize() {
-    const account = await alpacaClient.getAccount();
+    if (!this.client) {
+      throw new Error('PortfolioTracker: Client not set. Call setClient() first.');
+    }
+    const account = await this.client.getAccount();
     this.startingEquity = parseFloat(account.equity);
-    this.dailyStartEquity = parseFloat(account.last_equity);
+    this.dailyStartEquity = parseFloat(account.last_equity || account.equity);
   }
 
   recordTrade(trade) {
@@ -61,8 +70,12 @@ export class PortfolioTracker {
     };
 
     this.closedPositions.push(closedPos);
+    this.allTimeClosedPositions.push(closedPos); // Track lifetime (in-memory)
     this.realizedPL += realizedPL;
     this.dailyRealizedPL += realizedPL;
+
+    // Save to persistent historical data
+    historicalDataManager.recordClosedPosition(closedPos);
 
     // Remove from open positions
     this.openPositionMap.delete(symbol);
@@ -71,15 +84,15 @@ export class PortfolioTracker {
   }
 
   async getPortfolioSummary() {
-    const account = await alpacaClient.getAccount();
-    await alpacaClient.updatePositions();
+    const account = await this.client.getAccount();
+    await this.client.updatePositions();
 
     const currentEquity = parseFloat(account.equity);
     const buyingPower = parseFloat(account.buying_power);
     const dailyPL = currentEquity - this.dailyStartEquity;
     const dailyPLPercent = (dailyPL / this.dailyStartEquity) * 100;
 
-    const openPositions = Array.from(alpacaClient.positions.values());
+    const openPositions = Array.from(this.client.positions.values());
 
     return {
       equity: currentEquity,
@@ -95,6 +108,10 @@ export class PortfolioTracker {
     const winningTrades = this.closedPositions.filter(p => p.pl > 0);
     const losingTrades = this.closedPositions.filter(p => p.pl < 0);
 
+    // Get lifetime stats from persistent storage
+    const lifetimeStats = historicalDataManager.getLifetimeStats();
+    const todayStats = historicalDataManager.getTodayStats();
+
     let topWinner = null;
     let topLoser = null;
 
@@ -107,6 +124,7 @@ export class PortfolioTracker {
     }
 
     return {
+      // Today's stats (in-memory)
       totalTrades: this.closedPositions.length,
       winningTrades: winningTrades.length,
       losingTrades: losingTrades.length,
@@ -114,7 +132,16 @@ export class PortfolioTracker {
       totalPL: this.dailyRealizedPL,
       realizedPL: this.dailyRealizedPL,
       topWinner: topWinner,
-      topLoser: topLoser
+      topLoser: topLoser,
+      // Lifetime stats from persistent storage
+      lifetimeTotal: lifetimeStats.totalTrades,
+      lifetimeWins: lifetimeStats.winningTrades,
+      lifetimeLosses: lifetimeStats.losingTrades,
+      lifetimeWinRate: lifetimeStats.winRate,
+      lifetimeTotalPL: lifetimeStats.totalPL,
+      // Today's stats from persistent storage (for verification)
+      todayTotalFromHistory: todayStats.totalTrades,
+      todayPLFromHistory: todayStats.totalPL
     };
   }
 
